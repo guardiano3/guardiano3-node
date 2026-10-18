@@ -1,0 +1,13 @@
+docs/**
+test/**
+tests/**
+.github/**
+.travis.yml
+.gitlab-ci.yml
+git_push.sh
+.gitignore
+.npmignore
+README.md
+package.json
+tsconfig.json
+tsconfig.esm.json
