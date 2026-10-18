@@ -1,0 +1,105 @@
+name: Release
+
+# Publishes from a tag, never from a branch:
+#
+#   v1.2.3        -> npm, as @guardiano3/sdk@1.2.3, with provenance
+#   v1.2.3-rc.N   -> `npm publish --dry-run` only (the rehearsal): builds the
+#                    exact tarball and prints its file list; uploads nothing
+#
+# Authentication: npm trusted publishing (OIDC) once it is configured on the
+# package. npm configures it on an existing package, so the very first publish
+# uses the NPM_TOKEN secret of the `release` environment -- a short-lived
+# granular token, deleted straight after. The environment only accepts runs
+# from v* tags.
+#
+# To release: bump "version" in package.json (npm version <x.y.z>
+# --no-git-tag-version keeps the lockfile in step) and the CHANGELOG heading
+# through a reviewed pull request, then tag the merge commit. All four SDKs are
+# released together, at the same version.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    # The same gates as a pull request, against exactly the tagged commit.
+    uses: ./.github/workflows/ci.yml
+
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      # Job-level permissions replace the workflow's, so contents: read is
+      # restated -- without it the checkout of this private repository fails.
+      contents: read
+      id-token: write   # provenance and trusted publishing
+    outputs:
+      final: ${{ steps.version.outputs.final }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # Node 24 ships npm 11, which trusted publishing requires.
+          node-version: "24"
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: The tag matches the package version
+        id: version
+        env:
+          TAG: ${{ github.ref_name }}
+        run: |
+          declared="$(node -p 'require("./package.json").version')"
+          case "$TAG" in
+            "v${declared}")
+              echo "final=true" >> "$GITHUB_OUTPUT" ;;
+            "v${declared}-rc."*)
+              echo "final=false" >> "$GITHUB_OUTPUT" ;;
+            *)
+              echo "::error::tag $TAG does not match version ${declared} in package.json"
+              exit 1 ;;
+          esac
+          echo "version=${declared}" >> "$GITHUB_OUTPUT"
+
+      - run: npm ci
+      - run: npm run build
+
+      - name: Rehearse (dry run; nothing is uploaded)
+        if: steps.version.outputs.final == 'false'
+        run: npm publish --dry-run
+
+      - name: Publish to npm
+        if: steps.version.outputs.final == 'true'
+        env:
+          # Only for the first publish, before trusted publishing exists on the
+          # package; empty afterwards, and npm authenticates over OIDC.
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
+
+  github-release:
+    # Real releases only: a GitHub release whose notes are the CHANGELOG entry.
+    needs: publish
+    if: needs.publish.outputs.final == 'true'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create the GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+          VERSION: ${{ needs.publish.outputs.version }}
+        run: |
+          awk -v v="$VERSION" '
+            $0 ~ "^## " v "([ (]|$)" { on = 1; next }
+            on && /^## / { exit }
+            on { print }
+          ' CHANGELOG.md > notes.md
+          [ -s notes.md ] || echo "See CHANGELOG.md." > notes.md
+          gh release create "$TAG" --verify-tag --title "$TAG" --notes-file notes.md

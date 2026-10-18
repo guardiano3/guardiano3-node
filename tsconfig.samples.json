@@ -1,0 +1,30 @@
+{
+  "//": [
+    "Type-checks the TypeScript samples in README.md against the real SDK.",
+    "A sample that references a method or type the SDK no longer exports is a",
+    "compile error here, which is the whole point: prose can be wrong quietly,",
+    "code cannot.",
+    "",
+    "`paths` maps the published package name onto the local source, so the",
+    "samples can be written exactly as a consumer would write them rather than",
+    "with relative imports no reader would ever type.",
+    "",
+    "Run with: npm run typecheck:samples (extracts the samples first)."
+  ],
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022", "DOM"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
+    "paths": {
+      "@guardiano3/sdk": ["src/index.ts"]
+    }
+  },
+  "include": [".docs-samples/*.ts"]
+}

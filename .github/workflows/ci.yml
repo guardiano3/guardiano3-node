@@ -1,0 +1,102 @@
+name: CI
+
+# Pull requests into main, and release.yml before it publishes. Validate
+# locally before opening a pull request.
+on:
+  pull_request:
+    branches: [main]
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  drift:
+    # The committed generated/ must be exactly what openapi/v1.json produces.
+    # A hand edit to it, or a contract change without regenerating, fails here.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/generate.sh
+      - name: Generated code matches the contract
+        run: |
+          if [ -n "$(git status --porcelain -- generated)" ]; then
+            echo "::error::generated/ does not match openapi/v1.json. Run ./scripts/generate.sh and commit the result."
+            git status --short -- generated | head -50
+            exit 1
+          fi
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # The maintained LTS releases.
+        node-version: ["22", "24"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - name: README samples type-check against the SDK
+        run: npm run typecheck:samples
+      - run: npm run build
+      - run: npm test
+
+  package:
+    # What a customer gets is the tarball, not this checkout. Pack it, check the
+    # file list, then install it into an empty project and load it by name.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: The tarball holds the build, the licence and nothing else
+        run: |
+          npm pack --dry-run --json > pack.json
+          node -e '
+            const files = require("./pack.json")[0].files.map(f => f.path);
+            const bad = files.filter(f => !/^(dist\/(src|generated)\/|package\.json$|README\.md$|LICENSE$|NOTICE$)/.test(f));
+            for (const need of ["LICENSE", "NOTICE", "README.md", "dist/src/index.js", "dist/src/index.d.ts"])
+              if (!files.includes(need)) { console.error("missing from tarball:", need); process.exit(1); }
+            if (bad.length) { console.error("unexpected files in tarball:", bad); process.exit(1); }
+            console.log(files.length, "files ok");
+          '
+      - name: Install the tarball into an empty project and load it
+        run: |
+          npm pack
+          mkdir /tmp/clean && cd /tmp/clean && npm init -y >/dev/null
+          npm install "$GITHUB_WORKSPACE"/guardiano3-sdk-*.tgz
+          node -e 'const sdk = require("@guardiano3/sdk"); if (typeof sdk.Guardiano3 !== "function") process.exit(1); console.log("require ok")'
+          node --input-type=module -e 'import { Guardiano3 } from "@guardiano3/sdk"; if (typeof Guardiano3 !== "function") process.exit(1); console.log("import ok")'
+
+  dco:
+    # Every commit carries a Signed-off-by line from its author. See
+    # CONTRIBUTING.md in guardiano3/.github. Pull requests only: a release
+    # builds a commit that already passed this on its way into main.
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Every commit is signed off by its author
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+        run: |
+          bad=0
+          for c in $(git rev-list --no-merges "$BASE..$HEAD"); do
+            author="$(git log -1 --format='%an <%ae>' "$c")"
+            if ! git log -1 --format=%B "$c" | grep -qF "Signed-off-by: $author"; then
+              echo "::error::$(git log -1 --format='%h %s' "$c") is not signed off by $author (git commit -s)"
+              bad=1
+            fi
+          done
+          exit $bad
