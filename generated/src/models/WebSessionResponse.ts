@@ -22,7 +22,7 @@ import {
 } from './UserResponse';
 
 /**
- * Browser login response (ADR-018). No refresh token — it travels in a cookie.
+ * Browser sign-in response. No refresh token in the body — it is set as a cookie.
  * @export
  * @interface WebSessionResponse
  */

@@ -16,10 +16,9 @@ import { mapValues } from '../runtime';
 /**
  * Confirmation for an irreversible deletion.
  * 
- * `currentPassword` is optional in the schema and required in practice for any
- * account that has one -- an OAuth-only account has no password to check, and
- * a schema-level `required` would make the request impossible to satisfy for
- * those users. The server decides; see `IdentityService.delete_account`.
+ * `currentPassword` is required for an account that has a password. An
+ * account that has only ever signed in with a provider has no password to
+ * check, and omits it.
  * 
  * `confirm` must be the literal string `DELETE`. It is not security -- anyone
  * who can send the password can send the word -- it is there so that a

@@ -14,12 +14,7 @@
 
 import { mapValues } from '../runtime';
 /**
- * A signed-in session (a device), not an analysis session.
- * 
- * Named to disambiguate from `product.SessionResponse`, which is an analysis
- * session. Two Pydantic classes sharing a name is invisible on the server but
- * produces `SchemasV1AuthSessionResponse` as a generated SDK type -- the
- * contract's names are part of its public surface.
+ * A signed-in session (a device), not an analysis session (`SessionResponse`).
  * @export
  * @interface AuthSessionResponse
  */
