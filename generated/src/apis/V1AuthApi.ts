@@ -64,59 +64,59 @@ import {
     UserResponseToJSON,
 } from '../models/index';
 
-export interface ChangePasswordV1AuthPasswordPostRequest {
+export interface ChangePasswordRequest {
     passwordChangeRequest: PasswordChangeRequest;
 }
 
-export interface ConfirmEmailChangeV1AuthEmailConfirmPostRequest {
+export interface ConfirmEmailChangeRequest {
     tokenOnlyRequest: TokenOnlyRequest;
 }
 
-export interface ConfirmPasswordResetV1AuthPasswordResetConfirmPostRequest {
+export interface ConfirmPasswordResetRequest {
     passwordResetConfirmRequest: PasswordResetConfirmRequest;
 }
 
-export interface DeleteAccountV1AuthDeleteAccountPostRequest {
+export interface DeleteAccountRequest {
     accountDeleteRequest: AccountDeleteRequest;
 }
 
-export interface GoogleAuthV1AuthGooglePostRequest {
+export interface GoogleAuthOperationRequest {
     googleAuthRequest: GoogleAuthRequest;
 }
 
-export interface LoginV1AuthLoginPostRequest {
+export interface LoginOperationRequest {
     loginRequest: LoginRequest;
 }
 
-export interface LogoutV1AuthLogoutPostRequest {
+export interface LogoutOperationRequest {
     logoutRequest: LogoutRequest;
 }
 
-export interface RefreshV1AuthRefreshPostRequest {
+export interface RefreshOperationRequest {
     refreshRequest: RefreshRequest;
 }
 
-export interface RegisterV1AuthRegisterPostRequest {
+export interface RegisterOperationRequest {
     registerRequest: RegisterRequest;
 }
 
-export interface RequestEmailChangeV1AuthEmailPostRequest {
+export interface RequestEmailChangeRequest {
     emailChangeRequest: EmailChangeRequest;
 }
 
-export interface RequestPasswordResetV1AuthPasswordResetPostRequest {
+export interface RequestPasswordResetRequest {
     emailOnlyRequest: EmailOnlyRequest;
 }
 
-export interface ResendVerificationV1AuthResendVerificationPostRequest {
+export interface ResendVerificationRequest {
     emailOnlyRequest: EmailOnlyRequest;
 }
 
-export interface RevokeSessionV1AuthSessionsSessionIdDeleteRequest {
+export interface RevokeSessionRequest {
     sessionId: string;
 }
 
-export interface VerifyEmailV1AuthVerifyEmailPostRequest {
+export interface VerifyEmailRequest {
     tokenOnlyRequest: TokenOnlyRequest;
 }
 
@@ -129,11 +129,11 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Requires the current password. Signs out every other session; the caller\'s own session survives.
      * Change the password
      */
-    async changePasswordV1AuthPasswordPostRaw(requestParameters: ChangePasswordV1AuthPasswordPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async changePasswordRaw(requestParameters: ChangePasswordRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['passwordChangeRequest'] == null) {
             throw new runtime.RequiredError(
                 'passwordChangeRequest',
-                'Required parameter "passwordChangeRequest" was null or undefined when calling changePasswordV1AuthPasswordPost().'
+                'Required parameter "passwordChangeRequest" was null or undefined when calling changePassword().'
             );
         }
 
@@ -169,19 +169,19 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Requires the current password. Signs out every other session; the caller\'s own session survives.
      * Change the password
      */
-    async changePasswordV1AuthPasswordPost(requestParameters: ChangePasswordV1AuthPasswordPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.changePasswordV1AuthPasswordPostRaw(requestParameters, initOverrides);
+    async changePassword(requestParameters: ChangePasswordRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.changePasswordRaw(requestParameters, initOverrides);
     }
 
     /**
      * Signs out every session, since the account identity changed.
      * Confirm an email address change
      */
-    async confirmEmailChangeV1AuthEmailConfirmPostRaw(requestParameters: ConfirmEmailChangeV1AuthEmailConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
+    async confirmEmailChangeRaw(requestParameters: ConfirmEmailChangeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
         if (requestParameters['tokenOnlyRequest'] == null) {
             throw new runtime.RequiredError(
                 'tokenOnlyRequest',
-                'Required parameter "tokenOnlyRequest" was null or undefined when calling confirmEmailChangeV1AuthEmailConfirmPost().'
+                'Required parameter "tokenOnlyRequest" was null or undefined when calling confirmEmailChange().'
             );
         }
 
@@ -209,8 +209,8 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Signs out every session, since the account identity changed.
      * Confirm an email address change
      */
-    async confirmEmailChangeV1AuthEmailConfirmPost(requestParameters: ConfirmEmailChangeV1AuthEmailConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
-        const response = await this.confirmEmailChangeV1AuthEmailConfirmPostRaw(requestParameters, initOverrides);
+    async confirmEmailChange(requestParameters: ConfirmEmailChangeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
+        const response = await this.confirmEmailChangeRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -218,11 +218,11 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Signs out every session, including any the attacker holds.
      * Complete a password reset
      */
-    async confirmPasswordResetV1AuthPasswordResetConfirmPostRaw(requestParameters: ConfirmPasswordResetV1AuthPasswordResetConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async confirmPasswordResetRaw(requestParameters: ConfirmPasswordResetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['passwordResetConfirmRequest'] == null) {
             throw new runtime.RequiredError(
                 'passwordResetConfirmRequest',
-                'Required parameter "passwordResetConfirmRequest" was null or undefined when calling confirmPasswordResetV1AuthPasswordResetConfirmPost().'
+                'Required parameter "passwordResetConfirmRequest" was null or undefined when calling confirmPasswordReset().'
             );
         }
 
@@ -250,19 +250,19 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Signs out every session, including any the attacker holds.
      * Complete a password reset
      */
-    async confirmPasswordResetV1AuthPasswordResetConfirmPost(requestParameters: ConfirmPasswordResetV1AuthPasswordResetConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.confirmPasswordResetV1AuthPasswordResetConfirmPostRaw(requestParameters, initOverrides);
+    async confirmPasswordReset(requestParameters: ConfirmPasswordResetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.confirmPasswordResetRaw(requestParameters, initOverrides);
     }
 
     /**
      * Erases the account\'s personal data: session history and transcripts, feedback labels, sign-in sessions, MFA factors and pending tokens. API keys are revoked. The email address is freed for re-registration.  **Irreversible, and immediate.** There is no recovery period.  Requires the current password when the account has one. An account that only ever signed in with a provider has no password to check, so the session itself is the proof.
      * Delete this account and its data, permanently
      */
-    async deleteAccountV1AuthDeleteAccountPostRaw(requestParameters: DeleteAccountV1AuthDeleteAccountPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async deleteAccountRaw(requestParameters: DeleteAccountRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['accountDeleteRequest'] == null) {
             throw new runtime.RequiredError(
                 'accountDeleteRequest',
-                'Required parameter "accountDeleteRequest" was null or undefined when calling deleteAccountV1AuthDeleteAccountPost().'
+                'Required parameter "accountDeleteRequest" was null or undefined when calling deleteAccount().'
             );
         }
 
@@ -298,18 +298,18 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Erases the account\'s personal data: session history and transcripts, feedback labels, sign-in sessions, MFA factors and pending tokens. API keys are revoked. The email address is freed for re-registration.  **Irreversible, and immediate.** There is no recovery period.  Requires the current password when the account has one. An account that only ever signed in with a provider has no password to check, so the session itself is the proof.
      * Delete this account and its data, permanently
      */
-    async deleteAccountV1AuthDeleteAccountPost(requestParameters: DeleteAccountV1AuthDeleteAccountPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.deleteAccountV1AuthDeleteAccountPostRaw(requestParameters, initOverrides);
+    async deleteAccount(requestParameters: DeleteAccountRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteAccountRaw(requestParameters, initOverrides);
     }
 
     /**
      * Sign in with Google
      */
-    async googleAuthV1AuthGooglePostRaw(requestParameters: GoogleAuthV1AuthGooglePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
+    async googleAuthRaw(requestParameters: GoogleAuthOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
         if (requestParameters['googleAuthRequest'] == null) {
             throw new runtime.RequiredError(
                 'googleAuthRequest',
-                'Required parameter "googleAuthRequest" was null or undefined when calling googleAuthV1AuthGooglePost().'
+                'Required parameter "googleAuthRequest" was null or undefined when calling googleAuth().'
             );
         }
 
@@ -336,15 +336,15 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Sign in with Google
      */
-    async googleAuthV1AuthGooglePost(requestParameters: GoogleAuthV1AuthGooglePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
-        const response = await this.googleAuthV1AuthGooglePostRaw(requestParameters, initOverrides);
+    async googleAuth(requestParameters: GoogleAuthOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
+        const response = await this.googleAuthRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * List active sessions
      */
-    async listSessionsV1AuthSessionsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionListResponse>> {
+    async listSessionsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionListResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -373,19 +373,19 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * List active sessions
      */
-    async listSessionsV1AuthSessionsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionListResponse> {
-        const response = await this.listSessionsV1AuthSessionsGetRaw(initOverrides);
+    async listSessions(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionListResponse> {
+        const response = await this.listSessionsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Sign in
      */
-    async loginV1AuthLoginPostRaw(requestParameters: LoginV1AuthLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
+    async loginRaw(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
         if (requestParameters['loginRequest'] == null) {
             throw new runtime.RequiredError(
                 'loginRequest',
-                'Required parameter "loginRequest" was null or undefined when calling loginV1AuthLoginPost().'
+                'Required parameter "loginRequest" was null or undefined when calling login().'
             );
         }
 
@@ -412,19 +412,19 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Sign in
      */
-    async loginV1AuthLoginPost(requestParameters: LoginV1AuthLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
-        const response = await this.loginV1AuthLoginPostRaw(requestParameters, initOverrides);
+    async login(requestParameters: LoginOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
+        const response = await this.loginRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Sign out of the current session
      */
-    async logoutV1AuthLogoutPostRaw(requestParameters: LogoutV1AuthLogoutPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async logoutRaw(requestParameters: LogoutOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['logoutRequest'] == null) {
             throw new runtime.RequiredError(
                 'logoutRequest',
-                'Required parameter "logoutRequest" was null or undefined when calling logoutV1AuthLogoutPost().'
+                'Required parameter "logoutRequest" was null or undefined when calling logout().'
             );
         }
 
@@ -459,14 +459,14 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Sign out of the current session
      */
-    async logoutV1AuthLogoutPost(requestParameters: LogoutV1AuthLogoutPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.logoutV1AuthLogoutPostRaw(requestParameters, initOverrides);
+    async logout(requestParameters: LogoutOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.logoutRaw(requestParameters, initOverrides);
     }
 
     /**
      * The signed-in user
      */
-    async meV1AuthMeGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
+    async meRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -495,8 +495,8 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * The signed-in user
      */
-    async meV1AuthMeGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
-        const response = await this.meV1AuthMeGetRaw(initOverrides);
+    async me(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
+        const response = await this.meRaw(initOverrides);
         return await response.value();
     }
 
@@ -504,11 +504,11 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Refresh tokens are single-use. Each exchange returns a new pair and invalidates the one presented. Presenting an already-used token signs the whole session lineage out.
      * Exchange a refresh token
      */
-    async refreshV1AuthRefreshPostRaw(requestParameters: RefreshV1AuthRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
+    async refreshRaw(requestParameters: RefreshOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<TokenResponse>> {
         if (requestParameters['refreshRequest'] == null) {
             throw new runtime.RequiredError(
                 'refreshRequest',
-                'Required parameter "refreshRequest" was null or undefined when calling refreshV1AuthRefreshPost().'
+                'Required parameter "refreshRequest" was null or undefined when calling refresh().'
             );
         }
 
@@ -536,8 +536,8 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Refresh tokens are single-use. Each exchange returns a new pair and invalidates the one presented. Presenting an already-used token signs the whole session lineage out.
      * Exchange a refresh token
      */
-    async refreshV1AuthRefreshPost(requestParameters: RefreshV1AuthRefreshPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
-        const response = await this.refreshV1AuthRefreshPostRaw(requestParameters, initOverrides);
+    async refresh(requestParameters: RefreshOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<TokenResponse> {
+        const response = await this.refreshRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -545,11 +545,11 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Always returns 202 with the same body, whether or not the address is already registered. No session is issued: confirm the emailed link first, then sign in.
      * Create an account
      */
-    async registerV1AuthRegisterPostRaw(requestParameters: RegisterV1AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
+    async registerRaw(requestParameters: RegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
         if (requestParameters['registerRequest'] == null) {
             throw new runtime.RequiredError(
                 'registerRequest',
-                'Required parameter "registerRequest" was null or undefined when calling registerV1AuthRegisterPost().'
+                'Required parameter "registerRequest" was null or undefined when calling register().'
             );
         }
 
@@ -577,8 +577,8 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Always returns 202 with the same body, whether or not the address is already registered. No session is issued: confirm the emailed link first, then sign in.
      * Create an account
      */
-    async registerV1AuthRegisterPost(requestParameters: RegisterV1AuthRegisterPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
-        const response = await this.registerV1AuthRegisterPostRaw(requestParameters, initOverrides);
+    async register(requestParameters: RegisterOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
+        const response = await this.registerRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -586,11 +586,11 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Requires the current password. The account keeps its existing address until the new one is confirmed. Answers 202 even when the target address is already in use, so an authenticated session cannot be used to scan for registered addresses.
      * Request an email address change
      */
-    async requestEmailChangeV1AuthEmailPostRaw(requestParameters: RequestEmailChangeV1AuthEmailPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
+    async requestEmailChangeRaw(requestParameters: RequestEmailChangeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
         if (requestParameters['emailChangeRequest'] == null) {
             throw new runtime.RequiredError(
                 'emailChangeRequest',
-                'Required parameter "emailChangeRequest" was null or undefined when calling requestEmailChangeV1AuthEmailPost().'
+                'Required parameter "emailChangeRequest" was null or undefined when calling requestEmailChange().'
             );
         }
 
@@ -626,19 +626,19 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Requires the current password. The account keeps its existing address until the new one is confirmed. Answers 202 even when the target address is already in use, so an authenticated session cannot be used to scan for registered addresses.
      * Request an email address change
      */
-    async requestEmailChangeV1AuthEmailPost(requestParameters: RequestEmailChangeV1AuthEmailPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
-        const response = await this.requestEmailChangeV1AuthEmailPostRaw(requestParameters, initOverrides);
+    async requestEmailChange(requestParameters: RequestEmailChangeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
+        const response = await this.requestEmailChangeRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Request a password reset link
      */
-    async requestPasswordResetV1AuthPasswordResetPostRaw(requestParameters: RequestPasswordResetV1AuthPasswordResetPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
+    async requestPasswordResetRaw(requestParameters: RequestPasswordResetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
         if (requestParameters['emailOnlyRequest'] == null) {
             throw new runtime.RequiredError(
                 'emailOnlyRequest',
-                'Required parameter "emailOnlyRequest" was null or undefined when calling requestPasswordResetV1AuthPasswordResetPost().'
+                'Required parameter "emailOnlyRequest" was null or undefined when calling requestPasswordReset().'
             );
         }
 
@@ -665,19 +665,19 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Request a password reset link
      */
-    async requestPasswordResetV1AuthPasswordResetPost(requestParameters: RequestPasswordResetV1AuthPasswordResetPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
-        const response = await this.requestPasswordResetV1AuthPasswordResetPostRaw(requestParameters, initOverrides);
+    async requestPasswordReset(requestParameters: RequestPasswordResetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
+        const response = await this.requestPasswordResetRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Send the confirmation email again
      */
-    async resendVerificationV1AuthResendVerificationPostRaw(requestParameters: ResendVerificationV1AuthResendVerificationPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
+    async resendVerificationRaw(requestParameters: ResendVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AcceptedResponse>> {
         if (requestParameters['emailOnlyRequest'] == null) {
             throw new runtime.RequiredError(
                 'emailOnlyRequest',
-                'Required parameter "emailOnlyRequest" was null or undefined when calling resendVerificationV1AuthResendVerificationPost().'
+                'Required parameter "emailOnlyRequest" was null or undefined when calling resendVerification().'
             );
         }
 
@@ -704,8 +704,8 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Send the confirmation email again
      */
-    async resendVerificationV1AuthResendVerificationPost(requestParameters: ResendVerificationV1AuthResendVerificationPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
-        const response = await this.resendVerificationV1AuthResendVerificationPostRaw(requestParameters, initOverrides);
+    async resendVerification(requestParameters: ResendVerificationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AcceptedResponse> {
+        const response = await this.resendVerificationRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -713,7 +713,7 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Signs out everywhere except the session making the request.
      * Revoke every other session
      */
-    async revokeOtherSessionsV1AuthSessionsDeleteRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async revokeOtherSessionsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -743,18 +743,18 @@ export class V1AuthApi extends runtime.BaseAPI {
      * Signs out everywhere except the session making the request.
      * Revoke every other session
      */
-    async revokeOtherSessionsV1AuthSessionsDelete(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.revokeOtherSessionsV1AuthSessionsDeleteRaw(initOverrides);
+    async revokeOtherSessions(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.revokeOtherSessionsRaw(initOverrides);
     }
 
     /**
      * Revoke one session
      */
-    async revokeSessionV1AuthSessionsSessionIdDeleteRaw(requestParameters: RevokeSessionV1AuthSessionsSessionIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async revokeSessionRaw(requestParameters: RevokeSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['sessionId'] == null) {
             throw new runtime.RequiredError(
                 'sessionId',
-                'Required parameter "sessionId" was null or undefined when calling revokeSessionV1AuthSessionsSessionIdDelete().'
+                'Required parameter "sessionId" was null or undefined when calling revokeSession().'
             );
         }
 
@@ -787,18 +787,18 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Revoke one session
      */
-    async revokeSessionV1AuthSessionsSessionIdDelete(requestParameters: RevokeSessionV1AuthSessionsSessionIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.revokeSessionV1AuthSessionsSessionIdDeleteRaw(requestParameters, initOverrides);
+    async revokeSession(requestParameters: RevokeSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.revokeSessionRaw(requestParameters, initOverrides);
     }
 
     /**
      * Confirm an email address
      */
-    async verifyEmailV1AuthVerifyEmailPostRaw(requestParameters: VerifyEmailV1AuthVerifyEmailPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
+    async verifyEmailRaw(requestParameters: VerifyEmailRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserResponse>> {
         if (requestParameters['tokenOnlyRequest'] == null) {
             throw new runtime.RequiredError(
                 'tokenOnlyRequest',
-                'Required parameter "tokenOnlyRequest" was null or undefined when calling verifyEmailV1AuthVerifyEmailPost().'
+                'Required parameter "tokenOnlyRequest" was null or undefined when calling verifyEmail().'
             );
         }
 
@@ -825,8 +825,8 @@ export class V1AuthApi extends runtime.BaseAPI {
     /**
      * Confirm an email address
      */
-    async verifyEmailV1AuthVerifyEmailPost(requestParameters: VerifyEmailV1AuthVerifyEmailPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
-        const response = await this.verifyEmailV1AuthVerifyEmailPostRaw(requestParameters, initOverrides);
+    async verifyEmail(requestParameters: VerifyEmailRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserResponse> {
+        const response = await this.verifyEmailRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

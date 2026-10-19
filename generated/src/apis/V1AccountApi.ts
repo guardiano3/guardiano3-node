@@ -28,12 +28,12 @@ import {
     ProfileUpdateRequestToJSON,
 } from '../models/index';
 
-export interface GetAnalyticsV1AnalyticsGetRequest {
-    window?: GetAnalyticsV1AnalyticsGetWindowEnum;
-    environment?: GetAnalyticsV1AnalyticsGetEnvironmentEnum;
+export interface GetAnalyticsRequest {
+    window?: GetAnalyticsWindowEnum;
+    environment?: GetAnalyticsEnvironmentEnum;
 }
 
-export interface UpdateProfileV1UserProfilePatchRequest {
+export interface UpdateProfileRequest {
     profileUpdateRequest: ProfileUpdateRequest;
 }
 
@@ -46,7 +46,7 @@ export class V1AccountApi extends runtime.BaseAPI {
      * Sessions, analyses, verdicts and audio minutes for a rolling window. Organization-wide for organization members; your own otherwise. `environment=live` counts live API keys; `environment=test` counts test keys and the console sandbox. The two are never combined. Requires a signed-in user; API keys are not accepted.
      * Your organization\'s analytics
      */
-    async getAnalyticsV1AnalyticsGetRaw(requestParameters: GetAnalyticsV1AnalyticsGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsResponse>> {
+    async getAnalyticsRaw(requestParameters: GetAnalyticsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalyticsResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['window'] != null) {
@@ -84,15 +84,15 @@ export class V1AccountApi extends runtime.BaseAPI {
      * Sessions, analyses, verdicts and audio minutes for a rolling window. Organization-wide for organization members; your own otherwise. `environment=live` counts live API keys; `environment=test` counts test keys and the console sandbox. The two are never combined. Requires a signed-in user; API keys are not accepted.
      * Your organization\'s analytics
      */
-    async getAnalyticsV1AnalyticsGet(requestParameters: GetAnalyticsV1AnalyticsGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsResponse> {
-        const response = await this.getAnalyticsV1AnalyticsGetRaw(requestParameters, initOverrides);
+    async getAnalytics(requestParameters: GetAnalyticsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalyticsResponse> {
+        const response = await this.getAnalyticsRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Your profile
      */
-    async getProfileV1UserProfileGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProfileResponse>> {
+    async getProfileRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProfileResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -121,19 +121,19 @@ export class V1AccountApi extends runtime.BaseAPI {
     /**
      * Your profile
      */
-    async getProfileV1UserProfileGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfileResponse> {
-        const response = await this.getProfileV1UserProfileGetRaw(initOverrides);
+    async getProfile(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfileResponse> {
+        const response = await this.getProfileRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Update your profile
      */
-    async updateProfileV1UserProfilePatchRaw(requestParameters: UpdateProfileV1UserProfilePatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProfileResponse>> {
+    async updateProfileRaw(requestParameters: UpdateProfileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ProfileResponse>> {
         if (requestParameters['profileUpdateRequest'] == null) {
             throw new runtime.RequiredError(
                 'profileUpdateRequest',
-                'Required parameter "profileUpdateRequest" was null or undefined when calling updateProfileV1UserProfilePatch().'
+                'Required parameter "profileUpdateRequest" was null or undefined when calling updateProfile().'
             );
         }
 
@@ -168,8 +168,8 @@ export class V1AccountApi extends runtime.BaseAPI {
     /**
      * Update your profile
      */
-    async updateProfileV1UserProfilePatch(requestParameters: UpdateProfileV1UserProfilePatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfileResponse> {
-        const response = await this.updateProfileV1UserProfilePatchRaw(requestParameters, initOverrides);
+    async updateProfile(requestParameters: UpdateProfileRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ProfileResponse> {
+        const response = await this.updateProfileRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -178,19 +178,19 @@ export class V1AccountApi extends runtime.BaseAPI {
 /**
  * @export
  */
-export const GetAnalyticsV1AnalyticsGetWindowEnum = {
+export const GetAnalyticsWindowEnum = {
     _24h: '24h',
     _7d: '7d',
     _30d: '30d',
     _90d: '90d',
     _365d: '365d'
 } as const;
-export type GetAnalyticsV1AnalyticsGetWindowEnum = typeof GetAnalyticsV1AnalyticsGetWindowEnum[keyof typeof GetAnalyticsV1AnalyticsGetWindowEnum];
+export type GetAnalyticsWindowEnum = typeof GetAnalyticsWindowEnum[keyof typeof GetAnalyticsWindowEnum];
 /**
  * @export
  */
-export const GetAnalyticsV1AnalyticsGetEnvironmentEnum = {
+export const GetAnalyticsEnvironmentEnum = {
     Live: 'live',
     Test: 'test'
 } as const;
-export type GetAnalyticsV1AnalyticsGetEnvironmentEnum = typeof GetAnalyticsV1AnalyticsGetEnvironmentEnum[keyof typeof GetAnalyticsV1AnalyticsGetEnvironmentEnum];
+export type GetAnalyticsEnvironmentEnum = typeof GetAnalyticsEnvironmentEnum[keyof typeof GetAnalyticsEnvironmentEnum];

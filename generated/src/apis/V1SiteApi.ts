@@ -34,19 +34,19 @@ import {
     SubscriptionTokenRequestToJSON,
 } from '../models/index';
 
-export interface ConfirmSubscriptionV1SiteSubscribeConfirmPostRequest {
+export interface ConfirmSubscriptionRequest {
     subscriptionTokenRequest: SubscriptionTokenRequest;
 }
 
-export interface ContactSalesV1SiteContactSalesPostRequest {
+export interface ContactSalesOperationRequest {
     contactSalesRequest: ContactSalesRequest;
 }
 
-export interface SubscribeV1SiteSubscribePostRequest {
+export interface SubscribeOperationRequest {
     subscribeRequest: SubscribeRequest;
 }
 
-export interface UnsubscribeV1SiteUnsubscribePostRequest {
+export interface UnsubscribeRequest {
     subscriptionTokenRequest: SubscriptionTokenRequest;
 }
 
@@ -59,11 +59,11 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Uses the token from the confirmation email. Single use.
      * Confirm a subscription
      */
-    async confirmSubscriptionV1SiteSubscribeConfirmPostRaw(requestParameters: ConfirmSubscriptionV1SiteSubscribeConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubscriptionStatusResponse>> {
+    async confirmSubscriptionRaw(requestParameters: ConfirmSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubscriptionStatusResponse>> {
         if (requestParameters['subscriptionTokenRequest'] == null) {
             throw new runtime.RequiredError(
                 'subscriptionTokenRequest',
-                'Required parameter "subscriptionTokenRequest" was null or undefined when calling confirmSubscriptionV1SiteSubscribeConfirmPost().'
+                'Required parameter "subscriptionTokenRequest" was null or undefined when calling confirmSubscription().'
             );
         }
 
@@ -91,8 +91,8 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Uses the token from the confirmation email. Single use.
      * Confirm a subscription
      */
-    async confirmSubscriptionV1SiteSubscribeConfirmPost(requestParameters: ConfirmSubscriptionV1SiteSubscribeConfirmPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubscriptionStatusResponse> {
-        const response = await this.confirmSubscriptionV1SiteSubscribeConfirmPostRaw(requestParameters, initOverrides);
+    async confirmSubscription(requestParameters: ConfirmSubscriptionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubscriptionStatusResponse> {
+        const response = await this.confirmSubscriptionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -100,11 +100,11 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Stores the inquiry and forwards it to the sales inbox, with Reply-To set to the visitor. Nothing is emailed to the visitor.
      * Send a sales inquiry
      */
-    async contactSalesV1SiteContactSalesPostRaw(requestParameters: ContactSalesV1SiteContactSalesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SiteAcceptedResponse>> {
+    async contactSalesRaw(requestParameters: ContactSalesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SiteAcceptedResponse>> {
         if (requestParameters['contactSalesRequest'] == null) {
             throw new runtime.RequiredError(
                 'contactSalesRequest',
-                'Required parameter "contactSalesRequest" was null or undefined when calling contactSalesV1SiteContactSalesPost().'
+                'Required parameter "contactSalesRequest" was null or undefined when calling contactSales().'
             );
         }
 
@@ -132,8 +132,8 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Stores the inquiry and forwards it to the sales inbox, with Reply-To set to the visitor. Nothing is emailed to the visitor.
      * Send a sales inquiry
      */
-    async contactSalesV1SiteContactSalesPost(requestParameters: ContactSalesV1SiteContactSalesPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
-        const response = await this.contactSalesV1SiteContactSalesPostRaw(requestParameters, initOverrides);
+    async contactSales(requestParameters: ContactSalesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
+        const response = await this.contactSalesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -141,11 +141,11 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Starts double opt-in: sends a confirmation link and adds nothing to the mailing list until it is used. Always returns 202 with the same body, so the response never shows whether an address is already subscribed.
      * Subscribe to product updates
      */
-    async subscribeV1SiteSubscribePostRaw(requestParameters: SubscribeV1SiteSubscribePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SiteAcceptedResponse>> {
+    async subscribeRaw(requestParameters: SubscribeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SiteAcceptedResponse>> {
         if (requestParameters['subscribeRequest'] == null) {
             throw new runtime.RequiredError(
                 'subscribeRequest',
-                'Required parameter "subscribeRequest" was null or undefined when calling subscribeV1SiteSubscribePost().'
+                'Required parameter "subscribeRequest" was null or undefined when calling subscribe().'
             );
         }
 
@@ -173,8 +173,8 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Starts double opt-in: sends a confirmation link and adds nothing to the mailing list until it is used. Always returns 202 with the same body, so the response never shows whether an address is already subscribed.
      * Subscribe to product updates
      */
-    async subscribeV1SiteSubscribePost(requestParameters: SubscribeV1SiteSubscribePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
-        const response = await this.subscribeV1SiteSubscribePostRaw(requestParameters, initOverrides);
+    async subscribe(requestParameters: SubscribeOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
+        const response = await this.subscribeRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -182,11 +182,11 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Uses the token from an update email\'s unsubscribe link. Idempotent.
      * Unsubscribe from product updates
      */
-    async unsubscribeV1SiteUnsubscribePostRaw(requestParameters: UnsubscribeV1SiteUnsubscribePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubscriptionStatusResponse>> {
+    async unsubscribeRaw(requestParameters: UnsubscribeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SubscriptionStatusResponse>> {
         if (requestParameters['subscriptionTokenRequest'] == null) {
             throw new runtime.RequiredError(
                 'subscriptionTokenRequest',
-                'Required parameter "subscriptionTokenRequest" was null or undefined when calling unsubscribeV1SiteUnsubscribePost().'
+                'Required parameter "subscriptionTokenRequest" was null or undefined when calling unsubscribe().'
             );
         }
 
@@ -214,8 +214,8 @@ export class V1SiteApi extends runtime.BaseAPI {
      * Uses the token from an update email\'s unsubscribe link. Idempotent.
      * Unsubscribe from product updates
      */
-    async unsubscribeV1SiteUnsubscribePost(requestParameters: UnsubscribeV1SiteUnsubscribePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubscriptionStatusResponse> {
-        const response = await this.unsubscribeV1SiteUnsubscribePostRaw(requestParameters, initOverrides);
+    async unsubscribe(requestParameters: UnsubscribeRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SubscriptionStatusResponse> {
+        const response = await this.unsubscribeRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

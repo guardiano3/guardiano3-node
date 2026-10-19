@@ -284,7 +284,7 @@ test("the default base URL is production, and baseUrl overrides it", async () =>
     [{ baseUrl: "http://localhost:8000/" }, "http://localhost:8000/v1/whoami"],
   ] as const) {
     const client = new Guardiano3({ apiKey: "go3_test_x", fetchApi: stub, ...options });
-    await assert.rejects(client.apiKeys.whoamiV1WhoamiGet());
+    await assert.rejects(client.apiKeys.whoami());
     assert.equal(seen.pop(), expected);
   }
   assert.equal(DEFAULT_BASE_URL, "https://api.guardiano3.com");

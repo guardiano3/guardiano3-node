@@ -28,11 +28,11 @@ import {
     WebSessionResponseToJSON,
 } from '../models/index';
 
-export interface WebGoogleV1AuthWebGooglePostRequest {
+export interface WebGoogleRequest {
     googleAuthRequest: GoogleAuthRequest;
 }
 
-export interface WebLoginV1AuthWebLoginPostRequest {
+export interface WebLoginRequest {
     loginRequest: LoginRequest;
 }
 
@@ -44,11 +44,11 @@ export class V1AuthWebApi extends runtime.BaseAPI {
     /**
      * Browser Google sign-in (cookie)
      */
-    async webGoogleV1AuthWebGooglePostRaw(requestParameters: WebGoogleV1AuthWebGooglePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
+    async webGoogleRaw(requestParameters: WebGoogleRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
         if (requestParameters['googleAuthRequest'] == null) {
             throw new runtime.RequiredError(
                 'googleAuthRequest',
-                'Required parameter "googleAuthRequest" was null or undefined when calling webGoogleV1AuthWebGooglePost().'
+                'Required parameter "googleAuthRequest" was null or undefined when calling webGoogle().'
             );
         }
 
@@ -75,19 +75,19 @@ export class V1AuthWebApi extends runtime.BaseAPI {
     /**
      * Browser Google sign-in (cookie)
      */
-    async webGoogleV1AuthWebGooglePost(requestParameters: WebGoogleV1AuthWebGooglePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
-        const response = await this.webGoogleV1AuthWebGooglePostRaw(requestParameters, initOverrides);
+    async webGoogle(requestParameters: WebGoogleRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
+        const response = await this.webGoogleRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Browser sign-in (cookie)
      */
-    async webLoginV1AuthWebLoginPostRaw(requestParameters: WebLoginV1AuthWebLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
+    async webLoginRaw(requestParameters: WebLoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
         if (requestParameters['loginRequest'] == null) {
             throw new runtime.RequiredError(
                 'loginRequest',
-                'Required parameter "loginRequest" was null or undefined when calling webLoginV1AuthWebLoginPost().'
+                'Required parameter "loginRequest" was null or undefined when calling webLogin().'
             );
         }
 
@@ -114,15 +114,15 @@ export class V1AuthWebApi extends runtime.BaseAPI {
     /**
      * Browser sign-in (cookie)
      */
-    async webLoginV1AuthWebLoginPost(requestParameters: WebLoginV1AuthWebLoginPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
-        const response = await this.webLoginV1AuthWebLoginPostRaw(requestParameters, initOverrides);
+    async webLogin(requestParameters: WebLoginRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
+        const response = await this.webLoginRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Browser sign-out (cookie)
      */
-    async webLogoutV1AuthWebLogoutPostRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async webLogoutRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -143,14 +143,14 @@ export class V1AuthWebApi extends runtime.BaseAPI {
     /**
      * Browser sign-out (cookie)
      */
-    async webLogoutV1AuthWebLogoutPost(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.webLogoutV1AuthWebLogoutPostRaw(initOverrides);
+    async webLogout(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.webLogoutRaw(initOverrides);
     }
 
     /**
      * Refresh via cookie
      */
-    async webRefreshV1AuthWebRefreshPostRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
+    async webRefreshRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WebSessionResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -171,8 +171,8 @@ export class V1AuthWebApi extends runtime.BaseAPI {
     /**
      * Refresh via cookie
      */
-    async webRefreshV1AuthWebRefreshPost(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
-        const response = await this.webRefreshV1AuthWebRefreshPostRaw(initOverrides);
+    async webRefresh(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WebSessionResponse> {
+        const response = await this.webRefreshRaw(initOverrides);
         return await response.value();
     }
 

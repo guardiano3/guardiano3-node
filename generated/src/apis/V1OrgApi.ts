@@ -43,23 +43,23 @@ import {
     UpdateMemberRoleRequestToJSON,
 } from '../models/index';
 
-export interface AcceptInvitationV1OrgAcceptInvitationPostRequest {
+export interface AcceptInvitationOperationRequest {
     acceptInvitationRequest: AcceptInvitationRequest;
 }
 
-export interface CancelInvitationV1OrgInvitationsInvitationIdDeleteRequest {
+export interface CancelInvitationRequest {
     invitationId: string;
 }
 
-export interface InviteMemberV1OrgInvitationsPostRequest {
+export interface InviteMemberOperationRequest {
     inviteMemberRequest: InviteMemberRequest;
 }
 
-export interface RemoveMemberV1OrgMembersUserIdDeleteRequest {
+export interface RemoveMemberRequest {
     userId: string;
 }
 
-export interface UpdateMemberRoleV1OrgMembersUserIdPatchRequest {
+export interface UpdateMemberRoleOperationRequest {
     userId: string;
     updateMemberRoleRequest: UpdateMemberRoleRequest;
 }
@@ -72,11 +72,11 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Accept an organization invitation
      */
-    async acceptInvitationV1OrgAcceptInvitationPostRaw(requestParameters: AcceptInvitationV1OrgAcceptInvitationPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberResponse>> {
+    async acceptInvitationRaw(requestParameters: AcceptInvitationOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberResponse>> {
         if (requestParameters['acceptInvitationRequest'] == null) {
             throw new runtime.RequiredError(
                 'acceptInvitationRequest',
-                'Required parameter "acceptInvitationRequest" was null or undefined when calling acceptInvitationV1OrgAcceptInvitationPost().'
+                'Required parameter "acceptInvitationRequest" was null or undefined when calling acceptInvitation().'
             );
         }
 
@@ -111,19 +111,19 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Accept an organization invitation
      */
-    async acceptInvitationV1OrgAcceptInvitationPost(requestParameters: AcceptInvitationV1OrgAcceptInvitationPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberResponse> {
-        const response = await this.acceptInvitationV1OrgAcceptInvitationPostRaw(requestParameters, initOverrides);
+    async acceptInvitation(requestParameters: AcceptInvitationOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberResponse> {
+        const response = await this.acceptInvitationRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Cancel an invitation
      */
-    async cancelInvitationV1OrgInvitationsInvitationIdDeleteRaw(requestParameters: CancelInvitationV1OrgInvitationsInvitationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async cancelInvitationRaw(requestParameters: CancelInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['invitationId'] == null) {
             throw new runtime.RequiredError(
                 'invitationId',
-                'Required parameter "invitationId" was null or undefined when calling cancelInvitationV1OrgInvitationsInvitationIdDelete().'
+                'Required parameter "invitationId" was null or undefined when calling cancelInvitation().'
             );
         }
 
@@ -156,14 +156,14 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Cancel an invitation
      */
-    async cancelInvitationV1OrgInvitationsInvitationIdDelete(requestParameters: CancelInvitationV1OrgInvitationsInvitationIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.cancelInvitationV1OrgInvitationsInvitationIdDeleteRaw(requestParameters, initOverrides);
+    async cancelInvitation(requestParameters: CancelInvitationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.cancelInvitationRaw(requestParameters, initOverrides);
     }
 
     /**
      * Get current organization
      */
-    async getOrgV1OrgGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgResponse>> {
+    async getOrgRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -192,19 +192,19 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Get current organization
      */
-    async getOrgV1OrgGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgResponse> {
-        const response = await this.getOrgV1OrgGetRaw(initOverrides);
+    async getOrg(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgResponse> {
+        const response = await this.getOrgRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Invite a member
      */
-    async inviteMemberV1OrgInvitationsPostRaw(requestParameters: InviteMemberV1OrgInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvitationResponse>> {
+    async inviteMemberRaw(requestParameters: InviteMemberOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvitationResponse>> {
         if (requestParameters['inviteMemberRequest'] == null) {
             throw new runtime.RequiredError(
                 'inviteMemberRequest',
-                'Required parameter "inviteMemberRequest" was null or undefined when calling inviteMemberV1OrgInvitationsPost().'
+                'Required parameter "inviteMemberRequest" was null or undefined when calling inviteMember().'
             );
         }
 
@@ -239,15 +239,15 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Invite a member
      */
-    async inviteMemberV1OrgInvitationsPost(requestParameters: InviteMemberV1OrgInvitationsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvitationResponse> {
-        const response = await this.inviteMemberV1OrgInvitationsPostRaw(requestParameters, initOverrides);
+    async inviteMember(requestParameters: InviteMemberOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvitationResponse> {
+        const response = await this.inviteMemberRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * List pending invitations
      */
-    async listInvitationsV1OrgInvitationsGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvitationListResponse>> {
+    async listInvitationsRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InvitationListResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -276,15 +276,15 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * List pending invitations
      */
-    async listInvitationsV1OrgInvitationsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvitationListResponse> {
-        const response = await this.listInvitationsV1OrgInvitationsGetRaw(initOverrides);
+    async listInvitations(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InvitationListResponse> {
+        const response = await this.listInvitationsRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * List organization members
      */
-    async listMembersV1OrgMembersGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberListResponse>> {
+    async listMembersRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberListResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -313,19 +313,19 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * List organization members
      */
-    async listMembersV1OrgMembersGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberListResponse> {
-        const response = await this.listMembersV1OrgMembersGetRaw(initOverrides);
+    async listMembers(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberListResponse> {
+        const response = await this.listMembersRaw(initOverrides);
         return await response.value();
     }
 
     /**
      * Remove a member
      */
-    async removeMemberV1OrgMembersUserIdDeleteRaw(requestParameters: RemoveMemberV1OrgMembersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async removeMemberRaw(requestParameters: RemoveMemberRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['userId'] == null) {
             throw new runtime.RequiredError(
                 'userId',
-                'Required parameter "userId" was null or undefined when calling removeMemberV1OrgMembersUserIdDelete().'
+                'Required parameter "userId" was null or undefined when calling removeMember().'
             );
         }
 
@@ -358,25 +358,25 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Remove a member
      */
-    async removeMemberV1OrgMembersUserIdDelete(requestParameters: RemoveMemberV1OrgMembersUserIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.removeMemberV1OrgMembersUserIdDeleteRaw(requestParameters, initOverrides);
+    async removeMember(requestParameters: RemoveMemberRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.removeMemberRaw(requestParameters, initOverrides);
     }
 
     /**
      * Change a member\'s role
      */
-    async updateMemberRoleV1OrgMembersUserIdPatchRaw(requestParameters: UpdateMemberRoleV1OrgMembersUserIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberResponse>> {
+    async updateMemberRoleRaw(requestParameters: UpdateMemberRoleOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<OrgMemberResponse>> {
         if (requestParameters['userId'] == null) {
             throw new runtime.RequiredError(
                 'userId',
-                'Required parameter "userId" was null or undefined when calling updateMemberRoleV1OrgMembersUserIdPatch().'
+                'Required parameter "userId" was null or undefined when calling updateMemberRole().'
             );
         }
 
         if (requestParameters['updateMemberRoleRequest'] == null) {
             throw new runtime.RequiredError(
                 'updateMemberRoleRequest',
-                'Required parameter "updateMemberRoleRequest" was null or undefined when calling updateMemberRoleV1OrgMembersUserIdPatch().'
+                'Required parameter "updateMemberRoleRequest" was null or undefined when calling updateMemberRole().'
             );
         }
 
@@ -412,8 +412,8 @@ export class V1OrgApi extends runtime.BaseAPI {
     /**
      * Change a member\'s role
      */
-    async updateMemberRoleV1OrgMembersUserIdPatch(requestParameters: UpdateMemberRoleV1OrgMembersUserIdPatchRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberResponse> {
-        const response = await this.updateMemberRoleV1OrgMembersUserIdPatchRaw(requestParameters, initOverrides);
+    async updateMemberRole(requestParameters: UpdateMemberRoleOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<OrgMemberResponse> {
+        const response = await this.updateMemberRoleRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

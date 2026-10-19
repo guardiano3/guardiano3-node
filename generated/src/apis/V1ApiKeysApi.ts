@@ -40,23 +40,23 @@ import {
     WhoAmIResponseToJSON,
 } from '../models/index';
 
-export interface CreateApiKeyV1ApiKeysPostRequest {
+export interface CreateApiKeyRequest {
     apiKeyCreateRequest: ApiKeyCreateRequest;
 }
 
-export interface GetApiKeyV1ApiKeysKeyIdGetRequest {
+export interface GetApiKeyRequest {
     keyId: string;
 }
 
-export interface ListApiKeysV1ApiKeysGetRequest {
+export interface ListApiKeysRequest {
     includeRevoked?: boolean;
 }
 
-export interface RevokeApiKeyV1ApiKeysKeyIdDeleteRequest {
+export interface RevokeApiKeyRequest {
     keyId: string;
 }
 
-export interface RotateApiKeyV1ApiKeysKeyIdRotatePostRequest {
+export interface RotateApiKeyRequest {
     keyId: string;
     apiKeyRotateRequest: ApiKeyRotateRequest;
 }
@@ -70,11 +70,11 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * The secret is returned **once**, in this response. It is stored only as a hash and cannot be retrieved again — if it is lost, rotate the key.
      * Create an API key
      */
-    async createApiKeyV1ApiKeysPostRaw(requestParameters: CreateApiKeyV1ApiKeysPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyCreatedResponse>> {
+    async createApiKeyRaw(requestParameters: CreateApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyCreatedResponse>> {
         if (requestParameters['apiKeyCreateRequest'] == null) {
             throw new runtime.RequiredError(
                 'apiKeyCreateRequest',
-                'Required parameter "apiKeyCreateRequest" was null or undefined when calling createApiKeyV1ApiKeysPost().'
+                'Required parameter "apiKeyCreateRequest" was null or undefined when calling createApiKey().'
             );
         }
 
@@ -110,19 +110,19 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * The secret is returned **once**, in this response. It is stored only as a hash and cannot be retrieved again — if it is lost, rotate the key.
      * Create an API key
      */
-    async createApiKeyV1ApiKeysPost(requestParameters: CreateApiKeyV1ApiKeysPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyCreatedResponse> {
-        const response = await this.createApiKeyV1ApiKeysPostRaw(requestParameters, initOverrides);
+    async createApiKey(requestParameters: CreateApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyCreatedResponse> {
+        const response = await this.createApiKeyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Get one API key\'s metadata
      */
-    async getApiKeyV1ApiKeysKeyIdGetRaw(requestParameters: GetApiKeyV1ApiKeysKeyIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyResponse>> {
+    async getApiKeyRaw(requestParameters: GetApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyResponse>> {
         if (requestParameters['keyId'] == null) {
             throw new runtime.RequiredError(
                 'keyId',
-                'Required parameter "keyId" was null or undefined when calling getApiKeyV1ApiKeysKeyIdGet().'
+                'Required parameter "keyId" was null or undefined when calling getApiKey().'
             );
         }
 
@@ -155,8 +155,8 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
     /**
      * Get one API key\'s metadata
      */
-    async getApiKeyV1ApiKeysKeyIdGet(requestParameters: GetApiKeyV1ApiKeysKeyIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyResponse> {
-        const response = await this.getApiKeyV1ApiKeysKeyIdGetRaw(requestParameters, initOverrides);
+    async getApiKey(requestParameters: GetApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyResponse> {
+        const response = await this.getApiKeyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -164,7 +164,7 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Metadata only. Secrets are not recoverable.
      * List your API keys
      */
-    async listApiKeysV1ApiKeysGetRaw(requestParameters: ListApiKeysV1ApiKeysGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyListResponse>> {
+    async listApiKeysRaw(requestParameters: ListApiKeysRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyListResponse>> {
         const queryParameters: any = {};
 
         if (requestParameters['includeRevoked'] != null) {
@@ -198,8 +198,8 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Metadata only. Secrets are not recoverable.
      * List your API keys
      */
-    async listApiKeysV1ApiKeysGet(requestParameters: ListApiKeysV1ApiKeysGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyListResponse> {
-        const response = await this.listApiKeysV1ApiKeysGetRaw(requestParameters, initOverrides);
+    async listApiKeys(requestParameters: ListApiKeysRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyListResponse> {
+        const response = await this.listApiKeysRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -207,7 +207,7 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * The scope catalogue. Accepts any credential -- a user session or an API key -- because a caller choosing scopes for a new key already has one.
      * List the available scopes
      */
-    async listScopesV1ApiKeysScopesGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ScopeListResponse>> {
+    async listScopesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ScopeListResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -237,8 +237,8 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * The scope catalogue. Accepts any credential -- a user session or an API key -- because a caller choosing scopes for a new key already has one.
      * List the available scopes
      */
-    async listScopesV1ApiKeysScopesGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ScopeListResponse> {
-        const response = await this.listScopesV1ApiKeysScopesGetRaw(initOverrides);
+    async listScopes(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ScopeListResponse> {
+        const response = await this.listScopesRaw(initOverrides);
         return await response.value();
     }
 
@@ -246,11 +246,11 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Takes effect immediately. Revocation is a state, not a delete.
      * Revoke an API key
      */
-    async revokeApiKeyV1ApiKeysKeyIdDeleteRaw(requestParameters: RevokeApiKeyV1ApiKeysKeyIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async revokeApiKeyRaw(requestParameters: RevokeApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['keyId'] == null) {
             throw new runtime.RequiredError(
                 'keyId',
-                'Required parameter "keyId" was null or undefined when calling revokeApiKeyV1ApiKeysKeyIdDelete().'
+                'Required parameter "keyId" was null or undefined when calling revokeApiKey().'
             );
         }
 
@@ -284,26 +284,26 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Takes effect immediately. Revocation is a state, not a delete.
      * Revoke an API key
      */
-    async revokeApiKeyV1ApiKeysKeyIdDelete(requestParameters: RevokeApiKeyV1ApiKeysKeyIdDeleteRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.revokeApiKeyV1ApiKeysKeyIdDeleteRaw(requestParameters, initOverrides);
+    async revokeApiKey(requestParameters: RevokeApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.revokeApiKeyRaw(requestParameters, initOverrides);
     }
 
     /**
      * Issues a successor carrying the same name, scopes and environment. With `graceHours` the predecessor keeps working until the deadline, so a rotation is not an outage; with 0 it is revoked immediately.
      * Rotate an API key
      */
-    async rotateApiKeyV1ApiKeysKeyIdRotatePostRaw(requestParameters: RotateApiKeyV1ApiKeysKeyIdRotatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyCreatedResponse>> {
+    async rotateApiKeyRaw(requestParameters: RotateApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ApiKeyCreatedResponse>> {
         if (requestParameters['keyId'] == null) {
             throw new runtime.RequiredError(
                 'keyId',
-                'Required parameter "keyId" was null or undefined when calling rotateApiKeyV1ApiKeysKeyIdRotatePost().'
+                'Required parameter "keyId" was null or undefined when calling rotateApiKey().'
             );
         }
 
         if (requestParameters['apiKeyRotateRequest'] == null) {
             throw new runtime.RequiredError(
                 'apiKeyRotateRequest',
-                'Required parameter "apiKeyRotateRequest" was null or undefined when calling rotateApiKeyV1ApiKeysKeyIdRotatePost().'
+                'Required parameter "apiKeyRotateRequest" was null or undefined when calling rotateApiKey().'
             );
         }
 
@@ -340,8 +340,8 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Issues a successor carrying the same name, scopes and environment. With `graceHours` the predecessor keeps working until the deadline, so a rotation is not an outage; with 0 it is revoked immediately.
      * Rotate an API key
      */
-    async rotateApiKeyV1ApiKeysKeyIdRotatePost(requestParameters: RotateApiKeyV1ApiKeysKeyIdRotatePostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyCreatedResponse> {
-        const response = await this.rotateApiKeyV1ApiKeysKeyIdRotatePostRaw(requestParameters, initOverrides);
+    async rotateApiKey(requestParameters: RotateApiKeyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ApiKeyCreatedResponse> {
+        const response = await this.rotateApiKeyRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -349,7 +349,7 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Accepts either a user access token or an API key. Useful for confirming which key an integration is actually using and what it is permitted to do.
      * Describe the calling credential
      */
-    async whoamiV1WhoamiGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WhoAmIResponse>> {
+    async whoamiRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<WhoAmIResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -379,8 +379,8 @@ export class V1ApiKeysApi extends runtime.BaseAPI {
      * Accepts either a user access token or an API key. Useful for confirming which key an integration is actually using and what it is permitted to do.
      * Describe the calling credential
      */
-    async whoamiV1WhoamiGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WhoAmIResponse> {
-        const response = await this.whoamiV1WhoamiGetRaw(initOverrides);
+    async whoami(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<WhoAmIResponse> {
+        const response = await this.whoamiRaw(initOverrides);
         return await response.value();
     }
 
