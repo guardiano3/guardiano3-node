@@ -2,7 +2,7 @@
 /* eslint-disable */
 /**
  * GuardianO3 API
- * Real-time scam detection for phone calls.  Authenticate with a user access token or an API key; both are sent as `Authorization: Bearer <value>` and are distinguished by the `go3_` key prefix.  Errors share one envelope -- branch on `error.code`, never on `error.message`. Every response carries `X-Request-Id`; quote it in bug reports.  **Live-call channels** (`/v1/sessions/{session_id}/audio` and `/v1/sessions/{session_id}/stream`) use WebSocket, not HTTP. They are not listed under `paths` because OpenAPI 3.x has no first-class WebSocket support; their frame shapes and close codes are declared in the `x-websockets` extension at the top level of this document.
+ * Real-time scam detection for audio and text.  Authenticate with a user access token or an API key; both are sent as `Authorization: Bearer <value>` and are distinguished by the `go3_` key prefix.  Errors share one envelope -- branch on `error.code`, never on `error.message`. Every response carries `X-Request-Id`; quote it in bug reports.  **Live session channels** (`/v1/sessions/{session_id}/audio` and `/v1/sessions/{session_id}/stream`) use WebSocket, not HTTP. They are not listed under `paths` because OpenAPI 3.x has no first-class WebSocket support; their frame shapes and close codes are declared in the `x-websockets` extension at the top level of this document.
  *
  * The version of the OpenAPI document: 1.0.0
  * Contact: support@guardiano3.com
@@ -65,7 +65,7 @@ export class V1SessionsApi extends runtime.BaseAPI {
 
     /**
      * Accepts `Idempotency-Key`; a replay returns the original session.
-     * Start a call session
+     * Start a session
      */
     async createSessionV1SessionsPostRaw(requestParameters: CreateSessionV1SessionsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionCreatedResponse>> {
         if (requestParameters['sessionCreateRequest'] == null) {
@@ -109,7 +109,7 @@ export class V1SessionsApi extends runtime.BaseAPI {
 
     /**
      * Accepts `Idempotency-Key`; a replay returns the original session.
-     * Start a call session
+     * Start a session
      */
     async createSessionV1SessionsPost(requestParameters: CreateSessionV1SessionsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionCreatedResponse> {
         const response = await this.createSessionV1SessionsPostRaw(requestParameters, initOverrides);
@@ -209,7 +209,7 @@ export class V1SessionsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Finalise a call session
+     * Finalise a session
      */
     async stopSessionV1SessionsSessionIdStopPostRaw(requestParameters: StopSessionV1SessionsSessionIdStopPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionResponse>> {
         if (requestParameters['sessionId'] == null) {
@@ -246,7 +246,7 @@ export class V1SessionsApi extends runtime.BaseAPI {
     }
 
     /**
-     * Finalise a call session
+     * Finalise a session
      */
     async stopSessionV1SessionsSessionIdStopPost(requestParameters: StopSessionV1SessionsSessionIdStopPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionResponse> {
         const response = await this.stopSessionV1SessionsSessionIdStopPostRaw(requestParameters, initOverrides);
