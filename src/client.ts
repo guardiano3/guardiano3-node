@@ -71,7 +71,7 @@ export class Guardiano3 {
   /** Every past session, newest first, across pages. Lazy. */
   iterHistory(options: { limit?: number; maxItems?: number } = {}) {
     return paginate(
-      (cursor?: string) => this.sessions.listHistoryV1HistoryGet({ cursor, limit: options.limit }),
+      (cursor?: string) => this.sessions.listHistory({ cursor, limit: options.limit }),
       { maxItems: options.maxItems },
     );
   }

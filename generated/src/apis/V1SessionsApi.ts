@@ -34,25 +34,25 @@ import {
     SessionResponseToJSON,
 } from '../models/index';
 
-export interface CreateSessionV1SessionsPostRequest {
+export interface CreateSessionRequest {
     sessionCreateRequest: SessionCreateRequest;
     idempotencyKey?: string | null;
 }
 
-export interface GetSessionV1SessionsSessionIdGetRequest {
+export interface GetSessionRequest {
     sessionId: string;
 }
 
-export interface ListHistoryV1HistoryGetRequest {
+export interface ListHistoryRequest {
     cursor?: string | null;
     limit?: number | null;
 }
 
-export interface StopSessionV1SessionsSessionIdStopPostRequest {
+export interface StopSessionRequest {
     sessionId: string;
 }
 
-export interface SubmitFeedbackV1SessionsSessionIdFeedbackPostRequest {
+export interface SubmitFeedbackRequest {
     sessionId: string;
     feedbackRequest: FeedbackRequest;
     idempotencyKey?: string | null;
@@ -67,11 +67,11 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Accepts `Idempotency-Key`; a replay returns the original session.
      * Start a session
      */
-    async createSessionV1SessionsPostRaw(requestParameters: CreateSessionV1SessionsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionCreatedResponse>> {
+    async createSessionRaw(requestParameters: CreateSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionCreatedResponse>> {
         if (requestParameters['sessionCreateRequest'] == null) {
             throw new runtime.RequiredError(
                 'sessionCreateRequest',
-                'Required parameter "sessionCreateRequest" was null or undefined when calling createSessionV1SessionsPost().'
+                'Required parameter "sessionCreateRequest" was null or undefined when calling createSession().'
             );
         }
 
@@ -111,19 +111,19 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Accepts `Idempotency-Key`; a replay returns the original session.
      * Start a session
      */
-    async createSessionV1SessionsPost(requestParameters: CreateSessionV1SessionsPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionCreatedResponse> {
-        const response = await this.createSessionV1SessionsPostRaw(requestParameters, initOverrides);
+    async createSession(requestParameters: CreateSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionCreatedResponse> {
+        const response = await this.createSessionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Get one session
      */
-    async getSessionV1SessionsSessionIdGetRaw(requestParameters: GetSessionV1SessionsSessionIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionResponse>> {
+    async getSessionRaw(requestParameters: GetSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionResponse>> {
         if (requestParameters['sessionId'] == null) {
             throw new runtime.RequiredError(
                 'sessionId',
-                'Required parameter "sessionId" was null or undefined when calling getSessionV1SessionsSessionIdGet().'
+                'Required parameter "sessionId" was null or undefined when calling getSession().'
             );
         }
 
@@ -156,8 +156,8 @@ export class V1SessionsApi extends runtime.BaseAPI {
     /**
      * Get one session
      */
-    async getSessionV1SessionsSessionIdGet(requestParameters: GetSessionV1SessionsSessionIdGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionResponse> {
-        const response = await this.getSessionV1SessionsSessionIdGetRaw(requestParameters, initOverrides);
+    async getSession(requestParameters: GetSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionResponse> {
+        const response = await this.getSessionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -165,7 +165,7 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Cursor-paginated, newest first. Pass `cursor` from the previous response\'s `nextCursor`. The cursor is opaque -- do not parse or construct one.
      * List past sessions
      */
-    async listHistoryV1HistoryGetRaw(requestParameters: ListHistoryV1HistoryGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HistoryPage>> {
+    async listHistoryRaw(requestParameters: ListHistoryRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<HistoryPage>> {
         const queryParameters: any = {};
 
         if (requestParameters['cursor'] != null) {
@@ -203,19 +203,19 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Cursor-paginated, newest first. Pass `cursor` from the previous response\'s `nextCursor`. The cursor is opaque -- do not parse or construct one.
      * List past sessions
      */
-    async listHistoryV1HistoryGet(requestParameters: ListHistoryV1HistoryGetRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HistoryPage> {
-        const response = await this.listHistoryV1HistoryGetRaw(requestParameters, initOverrides);
+    async listHistory(requestParameters: ListHistoryRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<HistoryPage> {
+        const response = await this.listHistoryRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
     /**
      * Finalise a session
      */
-    async stopSessionV1SessionsSessionIdStopPostRaw(requestParameters: StopSessionV1SessionsSessionIdStopPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionResponse>> {
+    async stopSessionRaw(requestParameters: StopSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SessionResponse>> {
         if (requestParameters['sessionId'] == null) {
             throw new runtime.RequiredError(
                 'sessionId',
-                'Required parameter "sessionId" was null or undefined when calling stopSessionV1SessionsSessionIdStopPost().'
+                'Required parameter "sessionId" was null or undefined when calling stopSession().'
             );
         }
 
@@ -248,8 +248,8 @@ export class V1SessionsApi extends runtime.BaseAPI {
     /**
      * Finalise a session
      */
-    async stopSessionV1SessionsSessionIdStopPost(requestParameters: StopSessionV1SessionsSessionIdStopPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionResponse> {
-        const response = await this.stopSessionV1SessionsSessionIdStopPostRaw(requestParameters, initOverrides);
+    async stopSession(requestParameters: StopSessionRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SessionResponse> {
+        const response = await this.stopSessionRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -257,18 +257,18 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Your label for the session: scam or not.
      * Label a session as scam or not
      */
-    async submitFeedbackV1SessionsSessionIdFeedbackPostRaw(requestParameters: SubmitFeedbackV1SessionsSessionIdFeedbackPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+    async submitFeedbackRaw(requestParameters: SubmitFeedbackRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
         if (requestParameters['sessionId'] == null) {
             throw new runtime.RequiredError(
                 'sessionId',
-                'Required parameter "sessionId" was null or undefined when calling submitFeedbackV1SessionsSessionIdFeedbackPost().'
+                'Required parameter "sessionId" was null or undefined when calling submitFeedback().'
             );
         }
 
         if (requestParameters['feedbackRequest'] == null) {
             throw new runtime.RequiredError(
                 'feedbackRequest',
-                'Required parameter "feedbackRequest" was null or undefined when calling submitFeedbackV1SessionsSessionIdFeedbackPost().'
+                'Required parameter "feedbackRequest" was null or undefined when calling submitFeedback().'
             );
         }
 
@@ -309,8 +309,8 @@ export class V1SessionsApi extends runtime.BaseAPI {
      * Your label for the session: scam or not.
      * Label a session as scam or not
      */
-    async submitFeedbackV1SessionsSessionIdFeedbackPost(requestParameters: SubmitFeedbackV1SessionsSessionIdFeedbackPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
-        await this.submitFeedbackV1SessionsSessionIdFeedbackPostRaw(requestParameters, initOverrides);
+    async submitFeedback(requestParameters: SubmitFeedbackRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.submitFeedbackRaw(requestParameters, initOverrides);
     }
 
 }

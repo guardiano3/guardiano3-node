@@ -31,11 +31,11 @@ import {
     PolicyKindToJSON,
 } from '../models/index';
 
-export interface AcceptPoliciesV1PoliciesAcceptPostRequest {
+export interface AcceptPoliciesRequest {
     policyAcceptRequest: PolicyAcceptRequest;
 }
 
-export interface GetPolicyContentV1PoliciesKindGetRequest {
+export interface GetPolicyContentRequest {
     kind: PolicyKind;
 }
 
@@ -48,11 +48,11 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Records that the authenticated user has accepted the specified policy versions. Pass the `version` strings returned by `GET /v1/policies/current`. The server rejects a version that does not match the current one — this prevents a client from silently recording acceptance of a version it never showed the user.
      * Accept the current policies
      */
-    async acceptPoliciesV1PoliciesAcceptPostRaw(requestParameters: AcceptPoliciesV1PoliciesAcceptPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PoliciesAcceptedResponse>> {
+    async acceptPoliciesRaw(requestParameters: AcceptPoliciesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PoliciesAcceptedResponse>> {
         if (requestParameters['policyAcceptRequest'] == null) {
             throw new runtime.RequiredError(
                 'policyAcceptRequest',
-                'Required parameter "policyAcceptRequest" was null or undefined when calling acceptPoliciesV1PoliciesAcceptPost().'
+                'Required parameter "policyAcceptRequest" was null or undefined when calling acceptPolicies().'
             );
         }
 
@@ -88,8 +88,8 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Records that the authenticated user has accepted the specified policy versions. Pass the `version` strings returned by `GET /v1/policies/current`. The server rejects a version that does not match the current one — this prevents a client from silently recording acceptance of a version it never showed the user.
      * Accept the current policies
      */
-    async acceptPoliciesV1PoliciesAcceptPost(requestParameters: AcceptPoliciesV1PoliciesAcceptPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PoliciesAcceptedResponse> {
-        const response = await this.acceptPoliciesV1PoliciesAcceptPostRaw(requestParameters, initOverrides);
+    async acceptPolicies(requestParameters: AcceptPoliciesRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PoliciesAcceptedResponse> {
+        const response = await this.acceptPoliciesRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -97,7 +97,7 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Returns the version string and canonical URL for the current Terms of Service and Privacy Policy. No authentication required — this endpoint is called before a user signs in to decide whether to show the acceptance screen.  Compare the returned versions against `policiesAccepted` on `GET /v1/auth/me` to determine whether the signed-in user needs to accept an updated policy.
      * Current policy versions
      */
-    async getCurrentPoliciesV1PoliciesCurrentGetRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PoliciesCurrentResponse>> {
+    async getCurrentPoliciesRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PoliciesCurrentResponse>> {
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -119,8 +119,8 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Returns the version string and canonical URL for the current Terms of Service and Privacy Policy. No authentication required — this endpoint is called before a user signs in to decide whether to show the acceptance screen.  Compare the returned versions against `policiesAccepted` on `GET /v1/auth/me` to determine whether the signed-in user needs to accept an updated policy.
      * Current policy versions
      */
-    async getCurrentPoliciesV1PoliciesCurrentGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PoliciesCurrentResponse> {
-        const response = await this.getCurrentPoliciesV1PoliciesCurrentGetRaw(initOverrides);
+    async getCurrentPolicies(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PoliciesCurrentResponse> {
+        const response = await this.getCurrentPoliciesRaw(initOverrides);
         return await response.value();
     }
 
@@ -128,11 +128,11 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Returns the current version of the requested policy document as Markdown. No authentication required.
      * Policy document content
      */
-    async getPolicyContentV1PoliciesKindGetRaw(requestParameters: GetPolicyContentV1PoliciesKindGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
+    async getPolicyContentRaw(requestParameters: GetPolicyContentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<string>> {
         if (requestParameters['kind'] == null) {
             throw new runtime.RequiredError(
                 'kind',
-                'Required parameter "kind" was null or undefined when calling getPolicyContentV1PoliciesKindGet().'
+                'Required parameter "kind" was null or undefined when calling getPolicyContent().'
             );
         }
 
@@ -162,8 +162,8 @@ export class V1PoliciesApi extends runtime.BaseAPI {
      * Returns the current version of the requested policy document as Markdown. No authentication required.
      * Policy document content
      */
-    async getPolicyContentV1PoliciesKindGet(requestParameters: GetPolicyContentV1PoliciesKindGetRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
-        const response = await this.getPolicyContentV1PoliciesKindGetRaw(requestParameters, initOverrides);
+    async getPolicyContent(requestParameters: GetPolicyContentRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<string> {
+        const response = await this.getPolicyContentRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

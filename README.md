@@ -69,7 +69,7 @@ import { Guardiano3 } from "@guardiano3/sdk";
 
 const client = new Guardiano3({ apiKey: process.env.GO3_API_KEY! });
 
-const result = await client.analysis.analyzeTextV1AnalyzeTextPost({
+const result = await client.analysis.analyzeText({
   textAnalysisRequest: { text: "Share the OTP to unblock your account." },
 });
 
@@ -88,7 +88,7 @@ import { Guardiano3 } from "@guardiano3/sdk";
 const client = new Guardiano3({ apiKey: process.env.GO3_API_KEY! });
 
 const audio = new Blob([readFileSync("audio.m4a")], { type: "audio/mp4" });
-const verdict = await client.analysis.analyzeAudioV1AnalyzeAudioPost({ file: audio });
+const verdict = await client.analysis.analyzeAudio({ file: audio });
 
 console.log(verdict.riskLevel, verdict.transcript);
 ```
@@ -110,7 +110,7 @@ import {
 const client = new Guardiano3({ apiKey: process.env.GO3_API_KEY! });
 
 try {
-  await client.sessions.getSessionV1SessionsSessionIdGet({ sessionId: "nope" });
+  await client.sessions.getSession({ sessionId: "nope" });
 } catch (error) {
   if (error instanceof QuotaExceededError) {
     throw error;                       // do not retry: waiting will not help
@@ -204,7 +204,7 @@ import { Guardiano3, paginate } from "@guardiano3/sdk";
 const client = new Guardiano3({ accessToken: process.env.GO3_ACCESS_TOKEN! });
 
 for await (const item of paginate((cursor?: string) =>
-  client.sessions.listHistoryV1HistoryGet({ cursor }),
+  client.sessions.listHistory({ cursor }),
 )) {
   console.log(item.id);
 }
@@ -225,7 +225,7 @@ import { Guardiano3, LiveSession } from "@guardiano3/sdk";
 const client = new Guardiano3({ apiKey: process.env.GO3_API_KEY! });
 
 // 1. Create a session via REST
-const session = await client.sessions.createSessionV1SessionsPost({
+const session = await client.sessions.createSession({
   sessionCreateRequest: { phoneNumber: "+91 98765 43210", direction: "incoming" },
 });
 

@@ -25,12 +25,12 @@ import {
     TextAnalysisRequestToJSON,
 } from '../models/index';
 
-export interface AnalyzeAudioV1AnalyzeAudioPostRequest {
+export interface AnalyzeAudioRequest {
     file: Blob;
     language?: string | null;
 }
 
-export interface AnalyzeTextV1AnalyzeTextPostRequest {
+export interface AnalyzeTextRequest {
     textAnalysisRequest: TextAnalysisRequest;
     idempotencyKey?: string | null;
 }
@@ -44,11 +44,11 @@ export class V1AnalysisApi extends runtime.BaseAPI {
      * Requires the `analysis:write` scope. Uploads must carry an audio content type. Uploads larger than 25 MiB and clips longer than 120 seconds are refused with `413`, not truncated -- send the part of the audio to be scored, or stream live audio over the session WebSockets in real time. WAV, MP3, FLAC, OGG, MP4/M4A and WebM are decoded and resampled server-side; a file that cannot be decoded is refused with `415`. If transcription fails the response is `502` (or `504` on a timeout) -- never a low-risk verdict on audio that was not heard.  `Idempotency-Key` is **not** supported here. Retrying is safe: the audio is not stored, so a duplicate request is analysed again (and counts as a second analysis in analytics) without creating a duplicate record of the audio.
      * Transcribe and score an audio clip
      */
-    async analyzeAudioV1AnalyzeAudioPostRaw(requestParameters: AnalyzeAudioV1AnalyzeAudioPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalysisResponse>> {
+    async analyzeAudioRaw(requestParameters: AnalyzeAudioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalysisResponse>> {
         if (requestParameters['file'] == null) {
             throw new runtime.RequiredError(
                 'file',
-                'Required parameter "file" was null or undefined when calling analyzeAudioV1AnalyzeAudioPost().'
+                'Required parameter "file" was null or undefined when calling analyzeAudio().'
             );
         }
 
@@ -106,8 +106,8 @@ export class V1AnalysisApi extends runtime.BaseAPI {
      * Requires the `analysis:write` scope. Uploads must carry an audio content type. Uploads larger than 25 MiB and clips longer than 120 seconds are refused with `413`, not truncated -- send the part of the audio to be scored, or stream live audio over the session WebSockets in real time. WAV, MP3, FLAC, OGG, MP4/M4A and WebM are decoded and resampled server-side; a file that cannot be decoded is refused with `415`. If transcription fails the response is `502` (or `504` on a timeout) -- never a low-risk verdict on audio that was not heard.  `Idempotency-Key` is **not** supported here. Retrying is safe: the audio is not stored, so a duplicate request is analysed again (and counts as a second analysis in analytics) without creating a duplicate record of the audio.
      * Transcribe and score an audio clip
      */
-    async analyzeAudioV1AnalyzeAudioPost(requestParameters: AnalyzeAudioV1AnalyzeAudioPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalysisResponse> {
-        const response = await this.analyzeAudioV1AnalyzeAudioPostRaw(requestParameters, initOverrides);
+    async analyzeAudio(requestParameters: AnalyzeAudioRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalysisResponse> {
+        const response = await this.analyzeAudioRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -115,11 +115,11 @@ export class V1AnalysisApi extends runtime.BaseAPI {
      * Accepts `Idempotency-Key`. Requires the `analysis:write` scope.
      * Score a transcript
      */
-    async analyzeTextV1AnalyzeTextPostRaw(requestParameters: AnalyzeTextV1AnalyzeTextPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalysisResponse>> {
+    async analyzeTextRaw(requestParameters: AnalyzeTextRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<AnalysisResponse>> {
         if (requestParameters['textAnalysisRequest'] == null) {
             throw new runtime.RequiredError(
                 'textAnalysisRequest',
-                'Required parameter "textAnalysisRequest" was null or undefined when calling analyzeTextV1AnalyzeTextPost().'
+                'Required parameter "textAnalysisRequest" was null or undefined when calling analyzeText().'
             );
         }
 
@@ -159,8 +159,8 @@ export class V1AnalysisApi extends runtime.BaseAPI {
      * Accepts `Idempotency-Key`. Requires the `analysis:write` scope.
      * Score a transcript
      */
-    async analyzeTextV1AnalyzeTextPost(requestParameters: AnalyzeTextV1AnalyzeTextPostRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalysisResponse> {
-        const response = await this.analyzeTextV1AnalyzeTextPostRaw(requestParameters, initOverrides);
+    async analyzeText(requestParameters: AnalyzeTextRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<AnalysisResponse> {
+        const response = await this.analyzeTextRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
