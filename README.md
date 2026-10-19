@@ -5,7 +5,7 @@
 
 The official TypeScript and JavaScript client for the
 [GuardianO3](https://guardiano3.com) API: real-time fraud intelligence for phone
-calls. Send a transcript, an audio clip or a live call, and get a risk decision
+calls. Send a transcript, an audio clip or stream live audio, and get a risk decision
 back.
 
 You need an API key from the developer console at
@@ -87,7 +87,7 @@ import { Guardiano3 } from "@guardiano3/sdk";
 
 const client = new Guardiano3({ apiKey: process.env.GO3_API_KEY! });
 
-const audio = new Blob([readFileSync("call.m4a")], { type: "audio/mp4" });
+const audio = new Blob([readFileSync("audio.m4a")], { type: "audio/mp4" });
 const verdict = await client.analysis.analyzeAudioV1AnalyzeAudioPost({ file: audio });
 
 console.log(verdict.riskLevel, verdict.transcript);
@@ -212,7 +212,7 @@ for await (const item of paginate((cursor?: string) =>
 
 ## WebSocket / Live Sessions
 
-`LiveSession` manages the two WebSocket channels for real-time call
+`LiveSession` manages the two WebSocket channels for real-time session
 analysis: binary audio uplink and typed JSON decision downlink. It handles
 authentication, frame parsing, and connection lifecycle.
 
@@ -259,7 +259,7 @@ live.connect();
 
 // 3. Send PCM audio (16-bit LE, 16kHz mono). In a real client this is a chunk
 //    off the microphone; here it comes from a file.
-const pcmBuffer = await readFile("call.raw");
+const pcmBuffer = await readFile("audio.raw");
 live.sendAudio(pcmBuffer);
 
 // 4. When done
@@ -272,7 +272,7 @@ live.close();
 | `onDecision` | `DecisionFrame` | Scored chunk; `pending` verification means an update follows |
 | `onDecisionUpdate` | `DecisionUpdateFrame` | Final decision for a chunk first sent as `pending`; replace it in place |
 | `onLagging` | `LaggingFrame` | Audio arriving faster than transcription can process |
-| `onDegraded` | `DegradedFrame` | Part of the call was not transcribed; no decision covers it. Not fatal: do not read a quiet stream as a safe call |
+| `onDegraded` | `DegradedFrame` | Part of the audio was not analysed; no decision covers it. Not fatal: do not read a quiet stream as a safe session |
 | `onError` | `ErrorFrame` | Fatal; server closes after sending |
 | `onDisconnect` | — | Either WebSocket closed |
 
@@ -315,4 +315,4 @@ The licence covers this SDK's source code. Using the GuardianO3 API requires an
 API key and acceptance of the [Terms of Service](https://guardiano3.com/terms).
 
 Security issues: see [SECURITY](https://github.com/guardiano3/.github/blob/main/SECURITY.md).
-Never put API keys, call audio or transcripts in an issue.
+Never put API keys, session audio or transcripts in an issue.
