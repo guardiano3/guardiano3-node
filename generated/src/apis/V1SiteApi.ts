@@ -17,6 +17,7 @@ import * as runtime from '../runtime';
 import type {
   ContactSalesRequest,
   SiteAcceptedResponse,
+  SiteFeedbackRequest,
   SubscribeRequest,
   SubscriptionStatusResponse,
   SubscriptionTokenRequest,
@@ -26,6 +27,8 @@ import {
     ContactSalesRequestToJSON,
     SiteAcceptedResponseFromJSON,
     SiteAcceptedResponseToJSON,
+    SiteFeedbackRequestFromJSON,
+    SiteFeedbackRequestToJSON,
     SubscribeRequestFromJSON,
     SubscribeRequestToJSON,
     SubscriptionStatusResponseFromJSON,
@@ -40,6 +43,10 @@ export interface ConfirmSubscriptionRequest {
 
 export interface ContactSalesOperationRequest {
     contactSalesRequest: ContactSalesRequest;
+}
+
+export interface FeedbackRequest {
+    siteFeedbackRequest: SiteFeedbackRequest;
 }
 
 export interface SubscribeOperationRequest {
@@ -134,6 +141,47 @@ export class V1SiteApi extends runtime.BaseAPI {
      */
     async contactSales(requestParameters: ContactSalesOperationRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
         const response = await this.contactSalesRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Stores the feedback and forwards it to the support inbox, with Reply-To set to the sender when they give an email address. Nothing is emailed to the sender.
+     * Send feedback
+     */
+    async feedbackRaw(requestParameters: FeedbackRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<SiteAcceptedResponse>> {
+        if (requestParameters['siteFeedbackRequest'] == null) {
+            throw new runtime.RequiredError(
+                'siteFeedbackRequest',
+                'Required parameter "siteFeedbackRequest" was null or undefined when calling feedback().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+
+        let urlPath = `/v1/site/feedback`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: SiteFeedbackRequestToJSON(requestParameters['siteFeedbackRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => SiteAcceptedResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Stores the feedback and forwards it to the support inbox, with Reply-To set to the sender when they give an email address. Nothing is emailed to the sender.
+     * Send feedback
+     */
+    async feedback(requestParameters: FeedbackRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<SiteAcceptedResponse> {
+        const response = await this.feedbackRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

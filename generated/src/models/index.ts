@@ -66,6 +66,7 @@ export * from './SessionCreatedResponse';
 export * from './SessionListResponse';
 export * from './SessionResponse';
 export * from './SiteAcceptedResponse';
+export * from './SiteFeedbackRequest';
 export * from './SubscribeRequest';
 export * from './SubscriptionStatusResponse';
 export * from './SubscriptionTokenRequest';

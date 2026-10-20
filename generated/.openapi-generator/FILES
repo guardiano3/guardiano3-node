@@ -75,6 +75,7 @@ src/models/SessionCreatedResponse.ts
 src/models/SessionListResponse.ts
 src/models/SessionResponse.ts
 src/models/SiteAcceptedResponse.ts
+src/models/SiteFeedbackRequest.ts
 src/models/SubscribeRequest.ts
 src/models/SubscriptionStatusResponse.ts
 src/models/SubscriptionTokenRequest.ts
