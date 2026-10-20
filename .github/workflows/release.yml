@@ -6,11 +6,10 @@ name: Release
 #   v1.2.3-rc.N   -> `npm publish --dry-run` only (the rehearsal): builds the
 #                    exact tarball and prints its file list; uploads nothing
 #
-# Authentication: npm trusted publishing (OIDC) once it is configured on the
-# package. npm configures it on an existing package, so the very first publish
-# uses the NPM_TOKEN secret of the `release` environment -- a short-lived
-# granular token, deleted straight after. The environment only accepts runs
-# from v* tags.
+# Authentication: npm trusted publishing (OIDC) for this repository, this
+# workflow and the `release` environment, configured on the package. No npm
+# token is stored anywhere. The environment only accepts runs from v* tags and
+# needs a maintainer's approval.
 #
 # To release: bump "version" in package.json (npm version <x.y.z>
 # --no-git-tag-version keeps the lockfile in step) and the CHANGELOG heading
@@ -66,6 +65,13 @@ jobs:
           esac
           echo "version=${declared}" >> "$GITHUB_OUTPUT"
 
+      - name: npm is new enough for trusted publishing
+        run: |
+          v="$(npm --version)"
+          ok='const [a, b, c] = process.argv[1].split(".").map(Number);
+            process.exit(a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1))) ? 0 : 1)'
+          node -e "$ok" "$v" || { echo "::error::npm $v is older than 11.5.1, which trusted publishing needs"; exit 1; }
+
       - run: npm ci
       - run: npm run build
 
@@ -75,10 +81,7 @@ jobs:
 
       - name: Publish to npm
         if: steps.version.outputs.final == 'true'
-        env:
-          # Only for the first publish, before trusted publishing exists on the
-          # package; empty afterwards, and npm authenticates over OIDC.
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # Authenticates over OIDC (trusted publishing); provenance is automatic.
         run: npm publish
 
   github-release:
