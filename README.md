@@ -1,12 +1,9 @@
 # GuardianO3 TypeScript SDK
 
-> **Not published yet.** Version 0.1.0 is being prepared. `npm install @guardiano3/sdk`
-> works once it is on npm.
-
-The official TypeScript and JavaScript client for the
-[GuardianO3](https://guardiano3.com) API: real-time fraud intelligence for phone
-calls. Send a transcript, an audio clip or stream live audio, and get a risk decision
-back.
+The official TypeScript and JavaScript client for the [GuardianO3](https://guardiano3.com) API:
+scam-risk decisions for live customer sessions. Send text, an audio clip or
+a live audio stream, and get a risk decision back while the session is still
+live.
 
 You need an API key from the developer console at
 [guardiano3.com](https://guardiano3.com).
